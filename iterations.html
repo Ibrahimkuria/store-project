@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    body{
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #666;
+    }
+    .myGrades{
+        max-width: 600px;
+        width: 90%;
+    }
+     input[type = 'text']{
+        width: 100%;
+        margin-bottom: 20px;
+     }
+    </style>
+</head>
+<body>
+    <div class="myGrades">
+        <input type="text" placeholder="enter your marks" id="input">
+        <h1 id="display"></h1>
+        <button id="mark">
+            Show my mark
+        </button>
+    </div>
+    <script>
+        document.querySelector('#mark').addEventListener('click', displayMarks);
+        function displayMarks(){
+            
+
+            const display = document.getElementById('display');
+            const marks = document.getElementById('input').value;
+            const myMark = parseInt(marks)
+            display.innerText = ''
+            if(myMark < 0 || myMark >100){
+                display.innerText = 'This marks are invalid'
+
+            }
+            else if(myMark >= 70){
+                display.innerText = 'You scored an A'
+            }
+            else if(myMark >= 60){
+                display.innerText = 'You scored a B'
+            }
+            else if(myMark >= 50){
+                display.innerText = 'You scored a C'
+            }
+            else if(myMark >= 40){
+                display.innerText = 'You scored a D'
+            }
+            else{
+                display.innerText = 'You scored an E'
+            }
+            document.getElementById('input').value = ''
+
+            
+        }
+        
+        
+    </script>
+    
+
+</body>
+</html>

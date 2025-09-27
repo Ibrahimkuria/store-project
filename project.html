@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+        .container{
+            margin-left: 8rem;
+            height: 100vh;
+            
+
+        }
+        nav{
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 20px;
+            border-bottom: 2px solid #222;
+            padding: 10px !important;
+            a{
+                text-decoration: none;
+                color: #222;
+                padding-left: 15px;
+            }
+            input{
+                border: none;
+                background: #888;
+            }
+
+        }
+        .products-container{
+            width: 100%;
+        }
+        .card{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* responsive grid */
+            gap: 15px;
+            border-radius: 10px;
+            background-color: goldenrod;
+            margin-right: 50px;
+            color: black;
+            position: relative;
+            transition: margin-right 0.3s ease;
+            width: 100%;
+           
+        }
+        .product{
+            height: auto;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                border: 1px white solid;
+                border-radius: 10px;
+                margin: 50px;
+                width: 200px;
+                transition: all 0.3s ease-in-out;
+                z-index: 1;
+                padding: 10px;
+                background-color: #fff;
+                position: relative;
+        }
+        .product.active{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.5);
+            z-index: 999;
+            background-color: #666;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            
+        }
+        .product.active .product-image{
+                width: 100%;
+                height: 350px;
+                img{
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        .product-image{
+            width: 100%;
+            height: 150px;
+            background: #888;
+        }
+        img{
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+        .links a{
+            margin-left: 20px;
+        }
+        .close{
+            right: 0;
+            top: 0;
+            margin: 10px;
+            position: absolute;
+            display: block;
+            cursor: pointer;
+        }
+        .task-bar{
+            left: 0;
+            top: 0;
+            width: 10rem;
+            margin-right: 5px;
+            position: fixed;
+            background-color: #fff;
+            border-right: 1px solid blue;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+        }
+        .item{
+            background-color: #fff;
+            margin-bottom: 2rem;
+            border: 1px solid #222;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: row;
+            height: 150px;
+            position: relative;
+        }
+        .closeItem{
+            top: 5px;
+            right: 5px;
+            margin-bottom: 5px;
+            position: absolute;
+            font-size: 1rem;
+            background: tomato;
+        }
+        .closeItem:hover{
+            background: red;
+            cursor: pointer;
+            transform: scale(1.2);
+        }
+        h2{
+            border-bottom: 1px solid #222;
+            font-weight: 500;
+        }
+        .store-item{
+            margin-top: 20px;
+            h2{
+                color: gold;
+            }
+
+        }
+        ul li{
+            list-style: none;
+            padding: 5px;
+            margin: 5px 0;
+        }
+        ul li:hover{
+            border: 1px solid #222;
+            border-radius: 5px;
+            border-style: inset;
+            margin: 2px;
+
+        }
+        .cart{
+            background: #888;
+            padding: 5px 5px;
+            border: none;
+            border-radius: 5px;
+        }
+        .addItem{
+            padding: 5px 20px;
+            border: none;
+            background: tomato;
+            border-radius: 5px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        .description{
+            line-height: 1.2rem;
+            margin: 10px 0;
+            color: #222;
+        }
+       
+        .cart{
+            right: 0;
+            
+        }
+        .card.open{
+            margin-right: 270px; /* leave space for cartItems */
+            transition: margin-right 0.3s ease;
+            padding: 10px 30px;
+        }
+        .cartItems{
+            position: fixed;
+            opacity: 0;
+            right: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 10px;
+            width: 270px;
+            height: 100vh;
+            z-index: 999;
+            background-color: #fff;
+            overflow-y: auto;
+            border-left: 2px solid lightseagreen;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .totalSection{
+            bottom: 0;
+            margin-bottom: 0;
+            position: absolute;
+            display: block;
+            width: 100%;
+            background: green;
+            height: 100px;
+            color: #fff;
+        }
+        .cartItems.show{
+            display: block;
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .card.show{
+          align-items: center;
+          margin: 50%;
+          width: 80%;
+          left: 8rem;
+          
+        }
+        .item-image{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #666;
+            border-radius: 10px;
+        }
+        .item img{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+        .item .itemTitle{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            margin: 10px;
+        }
+        .product-section{
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            background: goldenrod;
+
+        }
+        .numbers{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .itemsNumber{
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+        }
+        #brandList li{
+            list-style-type: none;
+            margin-bottom: 10px;
+        }
+
+        </style>
+
+</head>
+<body>
+        
+    <div class="container">
+        
+        <nav>
+            <div class="nav-container">
+                <input type="text" placeholder="Enter your search" onkeyup="search()" id="input">
+            </div>
+            <div class="links">
+                <a href="#">Shop</a>
+                <a href="#">About Us</a>
+                <a href="#">Contacts</a>
+            </div>
+            <button class="cart">cart</button> 
+        </nav>
+
+        
+            <div class="product-section">
+                <div class="card">
+
+                </div>
+            </div>
+
+            
+        
+    </div>
+    <div class="task-bar">
+  <div class="store-item">
+    <h3>Search</h3>
+    <input type="text" id="searchInput" placeholder="Search products..." style="width: 80%;">
+  </div>
+
+  <div class="store-item">
+    <h3>Categories</h3>
+    <ul>
+      <li><input type="checkbox" value="shoes" class="category-filter" /> Shoes</li>
+      <li><input type="checkbox" value="clothes" class="category-filter" /> Clothes</li>
+      <li><input type="checkbox" value="accessories" class="category-filter" /> Accessories</li>
+    </ul>
+  </div>
+
+  <div class="store-item">
+    <h3>Price Range</h3>
+    <input type="range" min="0" max="500" step="5" id="priceRange" />
+    <p>Up to: $<span id="priceValue">250</span></p>
+  </div>
+
+  <div class="store-item">
+    <h3>Brands</h3>
+    <ul id="brandList">
+      <!-- Dynamically populated -->
+    </ul>
+  </div>
+
+  <div class="store-item">
+    <h3>Sort By</h3>
+    <select id="sortProducts">
+      <option value="default">Default</option>
+      <option value="lowToHigh">Price: Low to High</option>
+      <option value="highToLow">Price: High to Low</option>
+      <option value="name">Name</option>
+    </select>
+  </div>
+</div>
+
+    </div>
+    <div class="cartItems">
+        <div class="cartItemsList">
+
+        </div>
+        <div class="totalSection">
+
+        </div>
+       
+    </div>
+    <script src="products.js"></script>
+    <script>
+
+    //document.addEventListener("DOMContentLoaded", function () {
+                var card = document.querySelector('.card')
+
+        var output = '';
+        for(var i in products){
+            output += `
+            <div class = 'product'>
+                <div class = 'title'>
+                    <h1>${products[i].name}</h1>
+                </div>
+                <div class = product-image>
+                    <img src = '${products[i].imgSrc }' >
+                </div>
+                <div class = 'description'>
+                    <p>${products[i].description}</p>
+                </div>
+                <h3>Instock: ${products[i].instock}</h3>
+                <button onclick = 'addToCart(${products[i].id})' id='addItem'>Add to Cart</button>
+
+            </div>
+
+            `
+            
+        }
+        card.innerHTML = output;
+        var product = document.getElementsByClassName('product')
+        
+        
+       
+        var productEl = document.querySelectorAll('.product');
+        productEl.forEach((p)=>{
+
+            var close = document.createElement('SPAN');
+            var txt = document.createTextNode('\u00D7');
+            close.className = 'close';
+            close.appendChild(txt);
+            //product[i].appendChild(close);
+
+        
+            p.addEventListener('click', function(){
+                productEl.forEach((el) => el.classList.remove('active'));
+                              
+              this.classList.add('active')
+              this.appendChild(close) 
+              close.addEventListener('click', function(e){
+              e.target.style.cursor = 'pointer'
+              e.stopPropagation()
+              e.target.parentElement.classList.remove('active');
+        }) 
+              
+            })
+        })
+        
+        
+        let cart = JSON.parse(localStorage.getItem('CART')) || [];
+        updateCart();
+        
+
+        function addToCart(id){
+            if(cart.some(item => item.id === id) ){
+                alert('item already in cart')
+            }
+            else{
+                const item = products.find((product) => product.id === id);
+                if(item){
+                    const newItem ={
+                    ...item,
+                    numberOfItems: 1,
+                    };
+                    cart.push(newItem)
+                    console.log(item.numberOfItems)
+                    console.log(newItem)
+                     console.log(item)
+                }
+               
+                
+                
+            }
+            updateCart()
+            
+        }
+         function updateCart(){
+            
+            renderCartItems()
+            localStorage.setItem('CART', JSON.stringify(cart));
+
+        }
+        function renderCartItems() {
+        const cartItemsList = document.querySelector('.cartItemsList');
+        const totalSection = document.querySelector('.totalSection');
+
+        cartItemsList.innerHTML = ''; // Only clearing the item list, not the whole cart
+
+        let totalItems = 0;
+        let totalPrice = 0;
+
+        cart.forEach((item) => {
+            totalItems += item.numberOfItems;
+            totalPrice += item.numberOfItems * item.price;
+
+            cartItemsList.innerHTML += `
+                <div class="item">
+                    <span class="closeItem" onclick="deleteItem(${item.id})">X</span>
+                    <div class="item-image">
+                        <img src="${item.imgSrc}">
+                    </div>
+                    <div class="itemTitle">
+                        <h1>${item.name}</h1>
+                        <h3>Instock: ${item.instock}</h3>
+                    </div>
+                    <div class="numbers">
+                        <button onclick='changeNumberOfItems("plus", ${item.id})' class="addItem">+</button>
+                        <div class="itemsNumber">${item.numberOfItems}</div>
+                        <button onclick='changeNumberOfItems("minus", ${item.id})' class="addItem">-</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        totalSection.innerHTML = `
+            <hr />
+           
+            <h2>Total Items: ${totalItems}</h2>
+            <h2>Total Price: $${totalPrice.toFixed(2)}</h2>
+            <button onclick="checkout()" class="checkoutBtn">Checkout</button>
+        `;
+    }
+
+
+        const cartBtn = document.querySelector('.cart');
+        cartBtn.addEventListener('click', function(){
+            document.querySelector('.card').classList.toggle('open');
+            document.querySelector('.cartItems').classList.toggle('show');
+        })
+
+        function changeNumberOfItems(action, id){
+            console.log(cart)
+            
+            cart = cart.map((item) =>{
+                let numberOfItems = item.numberOfItems;
+                if(item.id === id){
+                    if(action === "plus"){
+                        numberOfItems++
+                    }else if(action === "minus" ){
+                        numberOfItems--
+                    }
+                }
+                
+                return {
+                ...item,
+                numberOfItems,
+            }
+            
+
+            });
+             cart = cart.filter(item => item.numberOfItems > 0);
+            
+                    
+            updateCart()
+            
+        }
+        function deleteItem(id){
+            cart = cart.filter((item) =>{
+                return item.id !== id;
+            })
+            updateCart()
+        }
+       console.log(products)
+    //});
+
+// Example product array with brands
+const myProducts = [
+  { id: 1, name: 'Nike Air', brand: 'Nike', category: 'shoes', price: 120 },
+  { id: 2, name: 'Adidas T-Shirt', brand: 'Adidas', category: 'clothes', price: 45 },
+  { id: 3, name: 'Puma Socks', brand: 'Puma', category: 'accessories', price: 10 },
+];
+
+// Dynamically populate brand list
+const brandList = document.getElementById('brandList');
+const brands = [...new Set(myProducts.map(p => p.brand))];
+brands.forEach(brand => {
+  brandList.innerHTML += `<li><input type="checkbox" value="${brand}" class="brand-filter"> ${brand}</li>`;
+});
+
+// Update price label on range input
+const priceRange = document.getElementById('priceRange');
+const priceValue = document.getElementById('priceValue');
+priceRange.addEventListener('input', function () {
+  priceValue.textContent = priceRange.value;
+});
+
+function search(){
+    const input = document.getElementById('input');
+    const filter = input.value.toUpperCase();
+    for(var i = 0; i <product.length; i++){
+        var head = product[i].getElementsByTagName('h1')[0];
+        if(head.textContent.toUpperCase().indexOf(filter) > -1){
+            product[i].style.display = 'block';
+        }else{
+            product[i].style.display = 'none'
+        }
+    }
+}
+
+</script>
+
+</body>
+</html>
